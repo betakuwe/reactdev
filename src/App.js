@@ -32,11 +32,13 @@ function Board({ currentMove, squares, onPlay }) {
   const xIsNext = currentMove % 2 === 0;
 
   function handleClick(i) {
-    if (squares[i] || calculateWinner(squares)) return;
+    if (squares[i] !== null || calculateWinner(squares)) return;
     const nextSquares = squares.slice();
-    nextSquares[i] = xIsNext ? "X" : "O";
+    nextSquares[i] = currentMove;
     onPlay(nextSquares);
   }
+
+  const [showOrder, setShowOrder] = useState(false);
 
   const winner = calculateWinner(squares);
   const status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? "X" : "O"}`;
@@ -47,19 +49,22 @@ function Board({ currentMove, squares, onPlay }) {
       <div className="board-row">
         {[0, 1, 2].map((c) => {
           const i = c + 3 * r;
-          return <Square value={squares[i]} onSquareClick={() => handleClick(i)} move={currentMove} />;
+          return <Square moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} />;
         })}
       </div>)}
     <div className="currentMove">You are at {currentMove > 0 ? `move #${currentMove}.` : 'the start.'}</div>
+    <button onClick={() => setShowOrder(!showOrder)}>Toggle show order</button>
   </>;
 }
 
-function Square({ value, onSquareClick, move }) {
+function Square({ moveNumber, onSquareClick, showOrder }) {
   return <button style={{ position: 'relative' }} className="square" onClick={onSquareClick}>
-    {value}
-    <div style={{ position: 'absolute', top: 0, left: '25%', color: 'grey' }}>
-      {move}
-    </div>
+    {moveNumber === null ? null : (moveNumber % 2 === 0 ? 'X' : 'O')}
+    {showOrder ||
+      <div style={{ position: 'absolute', top: 0, left: '25%', color: 'red' }}>
+        {moveNumber}
+      </div>
+    }
   </button>;
 }
 
