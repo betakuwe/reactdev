@@ -39,9 +39,13 @@ function Board({ currentMove, squares, onPlay }) {
   }
 
   const [showOrder, setShowOrder] = useState(false);
-
+  const noMoreMoves = currentMove >= 9;
   const winner = calculateWinner(squares);
-  const status = winner ? `Winner: ${winner}` : `Next player: ${xIsNext ? "X" : "O"}`;
+  const status = winner ?
+    `Winner: ${winner}` :
+    noMoreMoves ?
+      `Draw` :
+      `Next player: ${xIsNext ? "X" : "O"}`;
 
   return <>
     <div className="status">{status}</div>
