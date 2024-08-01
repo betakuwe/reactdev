@@ -40,8 +40,9 @@ function Board({ currentMove, squares, onPlay }) {
 
   const [showOrder, setShowOrder] = useState(false);
   const noMoreMoves = currentMove >= 9;
-  const winner = calculateWinner(squares);
-  const status = winner ?
+  const lineIfWin = calculateWinner(squares);
+  const winner = lineIfWin === null ? null : currentMove % 2 === 0 ? 'X' : 'O';
+  const status = lineIfWin ?
     `Winner: ${winner}` :
     noMoreMoves ?
       `Draw` :
@@ -49,9 +50,9 @@ function Board({ currentMove, squares, onPlay }) {
 
   return <>
     <div className="status">{status}</div>
-    {[0, 1, 2].map((r) =>
+    {[...Array(3).keys()].map((r) =>
       <div className="board-row">
-        {[0, 1, 2].map((c) => {
+        {[...Array(3).keys()].map((c) => {
           const i = c + 3 * r;
           return <Square moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} />;
         })}
@@ -86,7 +87,7 @@ function calculateWinner(squares) {
   for (let i = 0; i < lines.length; i++) {
     const [a, b, c] = lines[i];
     if (squares[a] && squares[a] === squares[b] & squares[a] === squares[c]) {
-      return squares[a];
+      return lines[i];
     }
   }
   return null;
