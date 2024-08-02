@@ -63,8 +63,8 @@ function Board({ currentMove, squares, onPlay }) {
   </>;
 }
 
-function Square({ moveNumber, onSquareClick, showOrder }) {
-  return <button style={{ position: 'relative' }} className="square" onClick={onSquareClick}>
+function Square({ moveNumber, onSquareClick, showOrder, highlight = false }) {
+  return <button style={{ position: 'relative' }} className={"square" } onClick={onSquareClick}>
     {moveNumber === null ? null : moveNumber % 2 === 0 ? 'X' : 'O'}
     {showOrder ||
       <div style={{ position: 'absolute', top: 0, left: '25%', color: 'red' }}>
