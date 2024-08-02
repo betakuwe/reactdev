@@ -30,9 +30,11 @@ export default function Game() {
 
 function Board({ currentMove, squares, onPlay }) {
   const xIsNext = currentMove % 2 === 0;
+  const lineIfWin = calculateWinner(squares);
 
   function handleClick(i) {
-    if (squares[i] !== null || calculateWinner(squares)) return;
+    console.log(lineIfWin);
+    if (squares[i] !== null || lineIfWin !== null) return;
     const nextSquares = squares.slice();
     nextSquares[i] = currentMove;
     onPlay(nextSquares);
@@ -40,9 +42,8 @@ function Board({ currentMove, squares, onPlay }) {
 
   const [showOrder, setShowOrder] = useState(false);
   const noMoreMoves = currentMove >= 9;
-  const lineIfWin = calculateWinner(squares);
-  const winner = lineIfWin === null ? null : currentMove % 2 === 0 ? 'X' : 'O';
-  const status = lineIfWin ?
+  const winner = lineIfWin === null ? null : currentMove % 2 === 1 ? 'X' : 'O';
+  const status = lineIfWin !== null ?
     `Winner: ${winner}` :
     noMoreMoves ?
       `Draw` :
@@ -51,10 +52,10 @@ function Board({ currentMove, squares, onPlay }) {
   return <>
     <div className="status">{status}</div>
     {[...Array(3).keys()].map((r) =>
-      <div className="board-row">
+      <div key={r} className="board-row">
         {[...Array(3).keys()].map((c) => {
           const i = c + 3 * r;
-          return <Square moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} />;
+          return <Square key={i} moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} />;
         })}
       </div>)}
     <div className="currentMove">You are at {currentMove > 0 ? `move #${currentMove}.` : 'the start.'}</div>
@@ -64,7 +65,7 @@ function Board({ currentMove, squares, onPlay }) {
 
 function Square({ moveNumber, onSquareClick, showOrder }) {
   return <button style={{ position: 'relative' }} className="square" onClick={onSquareClick}>
-    {moveNumber === null ? null : (moveNumber % 2 === 0 ? 'X' : 'O')}
+    {moveNumber === null ? null : moveNumber % 2 === 0 ? 'X' : 'O'}
     {showOrder ||
       <div style={{ position: 'absolute', top: 0, left: '25%', color: 'red' }}>
         {moveNumber}
@@ -85,8 +86,8 @@ function calculateWinner(squares) {
     [2, 4, 6]
   ];
   for (let i = 0; i < lines.length; i++) {
-    const [a, b, c] = lines[i];
-    if (squares[a] && squares[a] === squares[b] & squares[a] === squares[c]) {
+    const [x, y, z] = lines[i]?.map((i) => squares[i] === null ? null : squares[i] % 2)
+    if (x !== null && x === y && x === z) {
       return lines[i];
     }
   }
