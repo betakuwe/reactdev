@@ -66,12 +66,13 @@ body {
   height: 34px;
   margin-right: -1px;
   margin-top: -1px;
-  padding: 0;
+  padding: 1px;
   text-align: center;
   width: 34px;
 }
 
 .highlight-square {
+  border-width: 2px;
   border-color: red;
 }
 

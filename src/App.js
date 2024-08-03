@@ -55,7 +55,7 @@ function Board({ currentMove, squares, onPlay }) {
       <div key={r} className="board-row">
         {[...Array(3).keys()].map((c) => {
           const i = c + 3 * r;
-          return <Square key={i} moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} />;
+          return <Square key={i} moveNumber={squares[i]} onSquareClick={() => handleClick(i)} showOrder={showOrder} highlight={lineIfWin?.includes(i)} />;
         })}
       </div>)}
     <div className="currentMove">You are at {currentMove > 0 ? `move #${currentMove}.` : 'the start.'}</div>
@@ -64,7 +64,7 @@ function Board({ currentMove, squares, onPlay }) {
 }
 
 function Square({ moveNumber, onSquareClick, showOrder, highlight = false }) {
-  return <button style={{ position: 'relative' }} className={"square" } onClick={onSquareClick}>
+  return <button style={{ position: 'relative' }} className={`square ${highlight ? 'highlight-square' : ''}`} onClick={onSquareClick}>
     {moveNumber === null ? null : moveNumber % 2 === 0 ? 'X' : 'O'}
     {showOrder ||
       <div style={{ position: 'absolute', top: 0, left: '25%', color: 'red' }}>
